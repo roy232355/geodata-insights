@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoData Insights | GIS & Remote Sensing Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/satellite.js@4.0.0/dist/satellite.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+  :root {
+    --primary: #0D1117;         /* OLED black background */
+    --secondary: #58A6FF;       /* Bright neon blue */
+    --accent: #14F195;          /* Fresh mint green */
+    --text-text-dark: #161B22;         /* Dark surface color */
+    --text-black: #E6EDF3;      /* High contrast text */
+    --text-text-dark: #8B949E;      /* Muted text */
+    --border: #30363D;          /* Subtle border */
+    --card-hover: rgba(255, 255, 255, 0.08);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    background-color: var(--text-body);
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--text-body);
+  }
+
+  a {
+    color: var(--secondary);
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: var(--accent);
+  }
+
+  .nav-transparent {
+    background-color: rgba(13, 17, 23, 0.9);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-solid {
+    background-color: var(--neutral);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  }
+
+  .btn-primary {
+    background-color: var(--accent);
+    color: #000;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 20px rgba(20, 241, 149, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(20, 241, 149, 0.5);
+  }
+
+  .btn-secondary {
+    background-color: var(--secondary);
+    color: #000;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(88, 166, 255, 0.5);
+  }
+
+  .section {
+    padding: 100px 0;
+    background-color: var(--primary);
+  }
+
+  .section-title {
+    position: relative;
+    display: inline-block;
+    font-weight: 700;
+    color: var(--text-light);
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 3px;
+    bottom: -10px;
+    left: 0;
+    background-color: var(--secondary);
+  }
+
+  .service-card,
+  .case-study-card,
+  .tech-card {
+    background-color: var(--neutral);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .service-card:hover,
+  .case-study-card:hover,
+  .tech-card:hover {
+    transform: translateY(-6px);
+    background-color: var(--card-hover);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  }
+
+  .tech-icon {
+    color: var(--accent);
+  }
+
+  #globe-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    margin: 0 auto;
+    background-color: #010409;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+  }
+
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .input-field {
+    background-color: var(--neutral);
+    color: var(--text-light);
+    border: 1px solid var(--border);
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+    outline: none;
+  }
+
+  footer {
+    background-color: var(--neutral);
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 768px) {
+    #globe-container {
+      height: 350px;
+    }
+  }
+  
+        /* 3D Globe Container */
+        #globe-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+        
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        /* Typing animation */
+        .typing-text {
+            border-right: 4px solid var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .typing-text.typing {
+            animation: typing 4.5s steps(50, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--secondary) }
+        }
+        
+        /* Navigation */
+        .nav-transparent {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-solid {
+            background-color: var(--darker);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Cards */
+        .service-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            background-color: white;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .tech-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .tech-icon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+        }
+        
+        .case-study-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .case-study-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .case-study-img {
+            transition: all 0.5s ease;
+        }
+        
+        .case-study-card:hover .case-study-img {
+            transform: scale(1.05);
+        }
+        
+        /* Form elements */
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .input-field:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Sections */
+        .section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            bottom: -10px;
+            left: 0;
+            background-color: var(--secondary);
+        }
+        
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--darker);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--secondary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Map styles */
+        #office-map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-marker {
+            background-color: var(--secondary);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            cursor: pointer;
+        }
+        
+        /* Founder section */
+        .founder-card {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .founder-image {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .section {
+                padding: 80px 0;
+            }
+            
+            #globe-container {
+                height: 300px;
+            }
+            
+            #office-map {
+                height: 350px;
+            }
+            
+            .founder-card {
+                flex-direction: column;
+            }
+            
+            .founder-image {
+                height: 200px;
+                width: 100%;
+            }
+        }
+</style>
+
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 nav-transparent transition-all duration-300">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="text-white text-2xl font-bold">
+                        <span class="text-secondary">Geo</span>Data Insights
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-white hover:text-secondary transition">Home</a>
+                    <a href="#services" class="nav-link text-white hover:text-secondary transition">Services</a>
+                    <a href="#about" class="nav-link text-white hover:text-secondary transition">About</a>
+                    <a href="#founder" class="nav-link text-white hover:text-secondary transition">Founder</a>
+                    <a href="#technologies" class="nav-link text-white hover:text-secondary transition">Technologies</a>
+                    <a href="#case-studies" class="nav-link text-white hover:text-secondary transition">Case Studies</a>
+                    <a href="#contact" class="nav-link text-white hover:text-secondary transition">Contact</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobileMenuButton" class="text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-primary py-4 px-6">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="text-white hover:text-secondary transition">Home</a>
+                <a href="#services" class="text-white hover:text-secondary transition">Services</a>
+                <a href="#about" class="text-white hover:text-secondary transition">About</a>
+                <a href="#founder" class="text-white hover:text-secondary transition">Founder</a>
+                <a href="#technologies" class="text-white hover:text-secondary transition">Technologies</a>
+                <a href="#case-studies" class="text-white hover:text-secondary transition">Case Studies</a>
+                <a href="#contact" class="text-white hover:text-secondary transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="section bg-gradient-to-b from-darker to-dark text-white pt-32 pb-20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0 fade-in">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                        <span class="typing-text typing">GeoData Insights</span><br>
+                        <span class="text-secondary">Data Unearthed,</span><br>
+                        <span class="text-accent">Insights Defined</span>
+                    </h1>
+                    <p class="text-lg md:text-xl mb-8 text-neutral-200">
+                        Pioneering GIS & Remote Sensing Automation for a Smarter World. We transform complex geospatial data into actionable intelligence.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#services" class="btn-primary px-8 py-3 rounded-full text-white font-semibold pulse">
+                            Explore Our Solutions
+                        </a>
+                        <a href="#contact" class="btn-secondary px-8 py-3 rounded-full text-white font-semibold">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 slide-up">
+                    <div id="globe-container">
+                        <!-- 3D Globe will be rendered here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section bg-gray-50 py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
+                    Intelligent Solutions for a Data-Driven World
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Our comprehensive suite of geospatial services leverages cutting-edge technologies to deliver actionable insights across industries.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-leaf text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Precision Agriculture</h3>
+                    <p class="text-gray-600 mb-4">
+                        Optimize crop health, reduce inputs, and maximize yields with our AI-powered agricultural analytics.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Crop Health Monitoring
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Variable Rate Application
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Yield Prediction Models
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+                
+                <!-- Service Card 2 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-tree text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Sustainable Development</h3>
+                    <p class="text-gray-600 mb-4">
+                        Monitor environmental changes and support conservation efforts with our remote sensing solutions.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Deforestation Tracking
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Urban Sprawl Analysis
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Carbon Stock Estimation
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+                
+                <!-- Service Card 3 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-building text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Construction & Infrastructure</h3>
+                    <p class="text-gray-600 mb-4">
+                        Streamline construction projects with automated progress monitoring and 3D site visualization.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Automated Progress Tracking
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Volumetric Calculations
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Digital Twin Creation
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+                
+                <!-- Service Card 4 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-truck text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Transportation & Logistics</h3>
+                    <p class="text-gray-600 mb-4">
+                        Optimize routes, reduce costs, and improve fleet management with our GIS network analysis.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Route Optimization
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Fleet Tracking Solutions
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Infrastructure Planning
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+                
+                <!-- Service Card 5 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-robot text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">AI & Automation</h3>
+                    <p class="text-gray-600 mb-4">
+                        Leverage our custom AI algorithms for automated feature extraction and predictive modeling.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Automated Feature Extraction
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Predictive Modeling
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Change Detection
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+                
+                <!-- Service Card 6 -->
+                <div class="service-card rounded-xl p-8 shadow-lg">
+                    <div class="text-secondary mb-4">
+                        <i class="fas fa-cloud text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">SAAS Platform</h3>
+                    <p class="text-gray-600 mb-4">
+                        Access powerful geospatial insights through our intuitive, scalable cloud-based platform.
+                    </p>
+                    <ul class="space-y-2 text-gray-600 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Custom Dashboards
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            Automated Workflows
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-secondary mr-2"></i>
+                            API Integration
+                        </li>
+                    </ul>
+                    <a href="#" class="text-secondary font-semibold hover:underline">Learn More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section bg-white py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
+                    Our Global Presence
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                    With offices across three continents, we provide localized geospatial solutions with global expertise.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div id="office-map"></div>
+                <div class="p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-primary mb-3">Dubai Office</h3>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Business Bay, Dubai, UAE</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +971 4 123 4567</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-primary mb-3">Bangkok Office</h3>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Sathon, Bangkok, Thailand</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +66 2 123 4567</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-primary mb-3">Hyderabad Office</h3>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> HITEC City, Hyderabad, India</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +91 40 1234 5678</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-white rounded-xl shadow-lg p-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-primary">Our Mission & Vision</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-secondary bg-opacity-10 p-6 rounded-lg">
+                        <h4 class="font-bold text-secondary text-xl mb-4">Our Mission:</h4>
+                        <p class="text-gray-600">
+                            To empower organizations across industries with cutting-edge, automated GIS and Remote Sensing SAAS solutions, transforming raw data into strategic assets and fostering sustainable growth.
+                        </p>
+                    </div>
+                    <div class="bg-accent bg-opacity-10 p-6 rounded-lg">
+                        <h4 class="font-bold text-accent text-xl mb-4">Our Vision:</h4>
+                        <p class="text-gray-600">
+                            To be a global leader in geospatial intelligence, making advanced data analytics accessible, intuitive, and integral to decision-making for a better, more connected future.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder Section -->
+    <section id="founder" class="section bg-gray-50 py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
+                    Meet Our Founder
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                    The visionary behind GeoData Insights, driving innovation in geospatial intelligence.
+                </p>
+            </div>
+            
+            <div class="founder-card flex flex-col md:flex-row">
+                <div class="founder-image md:w-1/3 bg-[url('https://images.unsplash.com/photo-1742544699721-ce0cebb82e05?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]"></div>
+                <div class="md:w-2/3 p-8 text-black-50">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4">Mishak Rahul</h3>
+                    <p class="text-lg text-black-50-300 mb-6">
+                        With over 5 years of experience in GIS and remote sensing, Mishak Rahul founded GeoData Insights to bridge the gap between complex geospatial data and actionable business intelligence. His expertise in automation and AI-driven analytics has revolutionized how organizations leverage location data.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h4 class="font-semibold text-secondary mb-2">Education</h4>
+                            <ul class="space-y-2 text-black-50">
+                                <li class="flex items-start">
+                                    <i class="fas fa-graduation-cap text-secondary mr-2 mt-1"></i>
+                                    <span>Master of Engineering in Remote Sensing and Geographic Information Systems</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-graduation-cap text-secondary mr-2 mt-1"></i>
+                                    <span>Certified GIS Professional (GISP)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-secondary mb-2">Expertise</h4>
+                            <ul class="space-y-2 ">
+                                <li class="flex items-start">
+                                    <i class="fas fa-star text-secondary mr-2 mt-1"></i>
+                                    <span>GIS Automation</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-star text-secondary mr-2 mt-1"></i>
+                                    <span>Remote Sensing Analytics</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-star text-secondary mr-2 mt-1"></i>
+                                    <span>AI/ML Applications</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white hover:text-secondary transition">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-secondary transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-secondary transition">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technologies Section -->
+    <section id="technologies" class="section bg-white py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
+                    Powering Precision: The Technologies We Master
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Our comprehensive technology stack enables us to deliver cutting-edge geospatial solutions tailored to your needs.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- GIS Software -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">GIS Software</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>ArcGIS Suite</li>
+                        <li>QGIS</li>
+                        <li>Google Earth Engine</li>
+                        <li>ERDAS Imagine</li>
+                    </ul>
+                </div>
+                
+                <!-- Remote Sensing -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Remote Sensing</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>Satellite Imagery</li>
+                        <li>LiDAR</li>
+                        <li>Drone Data</li>
+                        <li>Radar (SAR)</li>
+                    </ul>
+                </div>
+                
+                <!-- AI & ML -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">AI & ML</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>Computer Vision</li>
+                        <li>TensorFlow/PyTorch</li>
+                        <li>Predictive Analytics</li>
+                        <li>Automated Workflows</li>
+                    </ul>
+                </div>
+                
+                <!-- Cloud & SAAS -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Cloud & SAAS</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>AWS/GCP/Azure</li>
+                        <li>PostGIS</li>
+                        <li>GeoServer</li>
+                        <li>API Development</li>
+                    </ul>
+                </div>
+                
+                <!-- Programming -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Programming</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>Python</li>
+                        <li>JavaScript</li>
+                        <li>R</li>
+                        <li>SQL</li>
+                    </ul>
+                </div>
+                
+                <!-- Visualization -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Visualization</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>Mapbox</li>
+                        <li>Leaflet</li>
+                        <li>D3.js</li>
+                        <li>3D Modeling</li>
+                    </ul>
+                </div>
+                
+                <!-- Data Processing -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Data Processing</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>GDAL</li>
+                        <li>Rasterio</li>
+                        <li>Geopandas</li>
+                        <li>Scikit-learn</li>
+                    </ul>
+                </div>
+                
+                <!-- Custom Solutions -->
+                <div class="tech-card bg-white rounded-xl p-6 shadow-md text-center">
+                    <div class="tech-icon text-5xl text-secondary mb-4">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-2">Custom Solutions</h3>
+                    <ul class="text-gray-600 text-sm">
+                        <li>Workflow Automation</li>
+                        <li>Custom Algorithms</li>
+                        <li>Integration Services</li>
+                        <li>White-label Solutions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="section bg-gray-50 py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
+                    Transforming Industries: Real-World Impact
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Explore how our geospatial solutions have delivered measurable results across diverse sectors.
+                </p>
+            </div>
+            
+            <div class="mb-8 flex justify-center">
+                <div class="inline-flex rounded-md shadow-sm">
+                    <button type="button" class="filter-btn px-4 py-2 text-sm font-medium rounded-l-lg border border-secondary bg-secondary text-white" data-filter="all">
+                        All Industries
+                    </button>
+                                        <button type="button" class="filter-btn px-4 py-2 text-sm font-medium border-t border-b border-secondary text-secondary" data-filter="agriculture">
+                        Agriculture
+                    </button>
+                    <button type="button" class="filter-btn px-4 py-2 text-sm font-medium border-t border-b border-secondary text-secondary" data-filter="construction">
+                        Construction
+                    </button>
+                    <button type="button" class="filter-btn px-4 py-2 text-sm font-medium border-t border-b border-secondary text-secondary" data-filter="sustainability">
+                        Sustainability
+                    </button>
+                    <button type="button" class="filter-btn px-4 py-2 text-sm font-medium rounded-r-lg border border-secondary text-secondary" data-filter="ai">
+                        AI Automation
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Case Study 1 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="agriculture">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://cdn.prod.website-files.com/63c11c31e4d776840d123bba/674092fbdbaa112d3a9a8c1b_0*I-VTwehSMOu6DGeG.jpeg" 
+                             alt="Precision Agriculture" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-secondary bg-secondary bg-opacity-10 rounded-full mb-2">Agriculture</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">AI-Powered Crop Health Monitoring Boosts Yield by 15%</h3>
+                        <p class="text-gray-600 mb-4">
+                            Implemented a custom AI solution using satellite and drone imagery to monitor crop health and detect stress early.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Leading Agribusiness</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Study 2 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="construction">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1544&q=80" 
+                             alt="Construction Monitoring" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-accent bg-accent bg-opacity-10 rounded-full mb-2">Construction</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">Automated Earthwork Tracking Saves 70% Reporting Time</h3>
+                        <p class="text-gray-600 mb-4">
+                            Developed a drone-based volumetric monitoring system for a major highway construction project.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Infrastructure Developer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Study 3 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="sustainability">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1632789124528-07b43ba96460?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                             alt="Deforestation Monitoring" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-green-500 bg-green-50 rounded-full mb-2">Sustainability</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">Deforestation Monitoring in the Amazon Using Time-Series Analysis</h3>
+                        <p class="text-gray-600 mb-4">
+                            Created an automated deforestation detection system using Sentinel-2 imagery and Google Earth Engine.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Environmental NGO</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Study 4 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="ai">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" 
+                             alt="AI Building Footprint" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-purple-500 bg-purple-50 rounded-full mb-2">AI Automation</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">Automated Building Footprint Extraction with 95% Accuracy</h3>
+                        <p class="text-gray-600 mb-4">
+                            Developed a deep learning model for automated building detection from high-resolution imagery.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Urban Planning Agency</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Study 5 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="agriculture">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://startnetx.in/wp-content/uploads/2024/08/zxcxbfrbbr.jpg" 
+                             alt="Vineyard Management" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-secondary bg-secondary bg-opacity-10 rounded-full mb-2">Agriculture</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">AI-Driven Pest Infestation Early Warning System</h3>
+                        <p class="text-gray-600 mb-4">
+                            Created a drone-based monitoring system for early pest detection in vineyards, reducing crop loss by 25%.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Vineyard Estate</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Study 6 -->
+                <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="ai">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Land Cover Classification" 
+                             class="w-full h-full object-cover case-study-img">
+                    </div>
+                    <div class="p-6">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold text-purple-500 bg-purple-50 rounded-full mb-2">AI Automation</span>
+                        <h3 class="text-xl font-bold text-primary mb-2">Scalable Land Cover Classification Using Machine Learning</h3>
+                        <p class="text-gray-600 mb-4">
+                            Implemented a Google Earth Engine solution for regional-scale land cover mapping with 90% accuracy.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
+                            <span class="text-xs text-gray-500">Client: Government Agency</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="btn-secondary px-8 py-3 rounded-full text-white font-semibold inline-block">
+                    View All Case Studies
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-gradient-to-b from-darker to-dark text-white py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-bold text-white inline-block">
+                    Let's Unearth Your Next Insight
+                </h2>
+                <p class="mt-6 text-lg text-neutral-200 max-w-3xl mx-auto">
+                    Ready to transform your data into actionable intelligence? Get in touch with our team today.
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row">
+                <div class="lg:w-1/2 mb-12 lg:mb-0 lg:pr-12">
+                    <div class="bg-white bg-opacity-10 rounded-xl p-8 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="text-secondary text-xl mr-4 mt-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Email</h4>
+                                    <a href="mailto:geodatainsights@asia.com" class="text-neutral-200 hover:text-secondary transition">geodatainsights@asia.com</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-secondary text-xl mr-4 mt-1">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">WhatsApp</h4>
+                                    <a href="https://wa.me/66951848485" class="text-neutral-200 hover:text-secondary transition block">+66 95 184 8485</a>
+                                    <a href="https://wa.me/919160531994" class="text-neutral-200 hover:text-secondary transition block">+91 916 053 1994</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-secondary text-xl mr-4 mt-1">
+                                    <i class="fab fa-line"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">LINE</h4>
+                                    <p class="text-neutral-200">iam.roy</p>
+                                    <div class="mt-2 bg-white p-2 rounded inline-block">
+                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://line.me/ti/p/~iam.roy" 
+                                             alt="LINE QR Code" 
+                                             class="w-24 h-24">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-secondary text-xl mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold mb-1">Location</h4>
+                                    <p class="text-neutral-200">Bangkok, Thailand</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-semibold mb-4">Connect With Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-white hover:text-secondary text-xl transition">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="text-white hover:text-secondary text-xl transition">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-white hover:text-secondary text-xl transition">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="#" class="text-white hover:text-secondary text-xl transition">
+                                    <i class="fab fa-medium"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="bg-white bg-opacity-10 rounded-xl p-8 backdrop-blur-sm">
+                        <h3 class="text-2xl font-bold mb-6">Send Us a Message</h3>
+                        
+                        <form id="contactForm" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-neutral-200 mb-2">Your Name</label>
+                                <input type="text" id="name" name="name" class="input-field w-full px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-secondary">
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block text-neutral-200 mb-2">Email Address</label>
+                                <input type="email" id="email" name="email" class="input-field w-full px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-secondary">
+                            </div>
+                            
+                            <div>
+                                <label for="company" class="block text-neutral-200 mb-2">Company (Optional)</label>
+                                <input type="text" id="company" name="company" class="input-field w-full px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-secondary">
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-neutral-200 mb-2">Subject</label>
+                                <select id="subject" name="subject" class="input-field w-full px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-secondary">
+                                    <option value="" disabled selected>Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="services">Services Information</option>
+                                    <option value="partnership">Partnership Opportunity</option>
+                                    <option value="careers">Careers</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-neutral-200 mb-2">Your Message</label>
+                                <textarea id="message" name="message" rows="4" class="input-field w-full px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none focus:border-secondary"></textarea>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="consent" name="consent" type="checkbox" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300 rounded" required>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="consent" class="text-neutral-200">I consent to GeoData Insights collecting my data for communication purposes.</label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <button type="submit" class="btn-secondary w-full px-6 py-3 rounded-lg text-white font-semibold transition">
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <div class="text-white text-2xl font-bold">
+                        <span class="text-secondary">Geo</span>Data Insights
+                    </div>
+                    <p class="mt-2 text-gray-400 text-sm">
+                        Transforming geospatial data into actionable intelligence.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
+                    <div>
+                        <h4 class="text-white font-semibold mb-3">Quick Links</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li><a href="#home" class="hover:text-secondary transition">Home</a></li>
+                            <li><a href="#services" class="hover:text-secondary transition">Services</a></li>
+                            <li><a href="#about" class="hover:text-secondary transition">About</a></li>
+                            <li><a href="#founder" class="hover:text-secondary transition">Founder</a></li>
+                            <li><a href="#technologies" class="hover:text-secondary transition">Technologies</a></li>
+                            <li><a href="#case-studies" class="hover:text-secondary transition">Case Studies</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-white font-semibold mb-3">Legal</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li><a href="#" class="hover:text-secondary transition">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-secondary transition">Terms of Service</a></li>
+                            <li><a href="#" class="hover:text-secondary transition">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-white font-semibold mb-3">Connect</h4>
+                        <ul class="space-y-2 text-gray-400 text-sm">
+                            <li><a href="mailto:geodatainsights@asia.com" class="hover:text-secondary transition">Email Us</a></li>
+                            <li><a href="https://wa.me/66951848485" class="hover:text-secondary transition">WhatsApp</a></li>
+                            <li><a href="#" class="hover:text-secondary transition">LinkedIn</a></li>
+                            <li><a href="#" class="hover:text-secondary transition">Twitter</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    © <span id="currentYear"></span> GeoData Insights. All rights reserved.
+                </p>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-secondary transition">
+                        <i class="fab fa-medium"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fixed bottom-8 right-8">
+            <a href="#home" class="bg-secondary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 transition">
+                <i class="fas fa-arrow-up"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.remove('nav-transparent');
+                navbar.classList.add('nav-solid');
+            } else {
+                navbar.classList.add('nav-transparent');
+                navbar.classList.remove('nav-solid');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Case study filtering
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const caseStudyCards = document.querySelectorAll('.case-study-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-secondary', 'text-white');
+                    btn.classList.add('text-secondary');
+                });
+                
+                this.classList.add('bg-secondary', 'text-white');
+                this.classList.remove('text-secondary');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                // Filter case studies
+                caseStudyCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Here you would typically send the form data to a server
+            // For this demo, we'll just show an alert
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Initialize 3D Globe
+        function initGlobe() {
+            const container = document.getElementById('globe-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            // Scene setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+            
+            // Earth
+            const geometry = new THREE.SphereGeometry(5, 64, 64);
+            const texture = new THREE.TextureLoader().load('https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg');
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const earth = new THREE.Mesh(geometry, material);
+            scene.add(earth);
+            
+            // Satellites
+            const satellites = [];
+            const satelliteGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+            const satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x3B82F6 });
+            
+            for (let i = 0; i < 3; i++) {
+                const satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
+                satellite.position.x = 7 * Math.cos((i * 120) * Math.PI / 180);
+                satellite.position.z = 7 * Math.sin((i * 120) * Math.PI / 180);
+                scene.add(satellite);
+                satellites.push(satellite);
+            }
+            
+            // Camera position
+            camera.position.z = 10;
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                earth.rotation.y += 0.002;
+                
+                satellites.forEach((sat, idx) => {
+                    const angle = Date.now() * 0.0005 + (idx * 120 * Math.PI / 180);
+                    sat.position.x = 7 * Math.cos(angle);
+                    sat.position.z = 7 * Math.sin(angle);
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newWidth = container.clientWidth;
+                const newHeight = container.clientHeight;
+                camera.aspect = newWidth / newHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(newWidth, newHeight);
+            });
+        }
+
+        // Initialize Office Map
+        function initOfficeMap() {
+            const map = L.map('office-map').setView([20, 80], 3);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Office locations
+            const offices = [
+                { name: "Dubai Office", coords: [25.1972, 55.2744], phone: "+971 4 123 4567" },
+                { name: "Bangkok Office", coords: [13.7200, 100.5200], phone: "+66 2 123 4567" },
+                { name: "Hyderabad Office", coords: [17.3850, 78.4867], phone: "+91 40 1234 5678" }
+            ];
+            
+            // Add markers
+            offices.forEach(office => {
+                const marker = L.marker(office.coords, {
+                    icon: L.divIcon({
+                        className: 'map-marker',
+                        iconSize: [24, 24]
+                    })
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div class="font-bold text-primary">${office.name}</div>
+                    <div class="text-gray-600">${office.phone}</div>
+                `);
+            });
+            
+            // Fit bounds to show all offices
+            const bounds = L.latLngBounds(offices.map(o => o.coords));
+            map.fitBounds(bounds.pad(0.2));
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initGlobe();
+            initOfficeMap();
+        });
+    </script>
+</body>
+</html>
