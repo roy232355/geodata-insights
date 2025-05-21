@@ -1543,7 +1543,78 @@
             initGlobe();
             initOfficeMap();
         });
-    </script>
+
+</script>
+
+
+</script>
+<!-- Optional Sound Alert -->
+<audio id="chat-sound" src="https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.mp3" preload="auto"></audio>
+
+
+<!-- Static Test Chatbot -->
+<div id="geoBotContainer" class="fixed bottom-6 right-6 z-50">
+  <button id="toggleGeoBot" class="btn-primary px-4 py-2 rounded-full">💬 Ask GeoBot</button>
+  <div id="geoBotPopup" class="hidden mt-2 w-96 h-96 bg-white text-black rounded-lg shadow-lg p-4 flex flex-col">
+    <div id="geoChatLog" class="flex-1 overflow-y-auto mb-2 text-sm space-y-2"></div>
+    <input id="geoChatInput" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Type a message..." />
+  </div>
+</div>
+
+<script>
+  const toggleGeoBot = document.getElementById('toggleGeoBot');
+  const geoPopup = document.getElementById('geoBotPopup');
+  const geoInput = document.getElementById('geoChatInput');
+  const geoLog = document.getElementById('geoChatLog');
+
+  toggleGeoBot.addEventListener('click', () => geoPopup.classList.toggle('hidden'));
+
+  geoInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && geoInput.value.trim()) {
+      const userMessage = geoInput.value.trim();
+      geoInput.value = '';
+      appendGeoMessage('You', userMessage);
+      simulateGeoResponse(userMessage);
+    }
+  });
+
+  function appendGeoMessage(sender, message) {
+    const msgDiv = document.createElement('div');
+    msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    geoLog.appendChild(msgDiv);
+    geoLog.scrollTop = geoLog.scrollHeight;
+  }
+
+  function simulateGeoResponse(userInput) {
+    const lowerInput = userInput.toLowerCase();
+
+    let reply = "I'm here to help with GeoData Insights!";
+
+    if (["hi", "hello", "hey"].includes(lowerInput)) {
+      reply = "👋 Hello! How can I assist you today?";
+    } else if (lowerInput.includes("service")) {
+      reply = "🛠️ We offer GIS, Remote Sensing, Agriculture Automation, Infrastructure Monitoring, and more!";
+    } else if (lowerInput.includes("contact")) {
+      reply = "📞 You can contact us at geodatainsights@asia.com or WhatsApp +66 95 184 8485.";
+    } else if (lowerInput.includes("location") || lowerInput.includes("office")) {
+      reply = "📍 Our offices are in Dubai, Bangkok, and Hyderabad.";
+    } else if (lowerInput.includes("founder")) {
+      reply = "👨‍💼 Our founder is Mishak Rahul, an expert in GIS Automation and Remote Sensing Analytics.";
+    } else {
+      reply = "🤖 Sorry, I'm just a demo bot. Try asking about services, contact, or our offices!";
+    }
+
+    setTimeout(() => appendGeoMessage('GeoBot', reply), 800);
+  }
+
+  // Greet user after auto-popup
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      geoPopup.classList.remove("hidden");
+      appendGeoMessage("GeoBot", "👋 Hi there! I'm GeoBot from GeoData Insights. Ask me about services, offices, or how to contact us!");
+    }, 3000);
+  });
+</script>
 
 </body>
 </html>
