@@ -1544,5 +1544,115 @@
             initOfficeMap();
         });
     </script>
+<!-- GeoBot Chatbot with Close Button -->
+<style>
+  .chatbot-slide-in {
+    animation: slideIn 0.5s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div id="geoBotContainer" class="fixed bottom-6 right-6 z-50">
+  <button id="toggleGeoBot" class="btn-primary px-4 py-2 rounded-full">💬 Ask GeoBot</button>
+
+  <div id="geoBotPopup" class="hidden chatbot-slide-in mt-2 w-96 h-[28rem] bg-white text-black rounded-lg shadow-2xl p-4 flex flex-col relative">
+    
+    <!-- Close Button -->
+    <button id="closeGeoBot" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl font-bold">&times;</button>
+
+    <div id="geoChatLog" class="flex-1 overflow-y-auto mb-2 text-sm space-y-2 px-1 mt-6"></div>
+
+    <!-- Quick Replies -->
+    <div class="mb-2 flex flex-wrap gap-2">
+      <button class="quick-btn bg-gray-200 text-sm px-3 py-1 rounded-full hover:bg-gray-300" data-msg="Services">Services</button>
+      <button class="quick-btn bg-gray-200 text-sm px-3 py-1 rounded-full hover:bg-gray-300" data-msg="Contact">Contact</button>
+      <button class="quick-btn bg-gray-200 text-sm px-3 py-1 rounded-full hover:bg-gray-300" data-msg="Offices">Offices</button>
+    </div>
+
+    <input id="geoChatInput" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Type your message..." />
+  </div>
+</div>
+
+<script>
+  const toggleGeoBot = document.getElementById('toggleGeoBot');
+  const geoPopup = document.getElementById('geoBotPopup');
+  const closeGeoBot = document.getElementById('closeGeoBot');
+  const geoInput = document.getElementById('geoChatInput');
+  const geoLog = document.getElementById('geoChatLog');
+
+  // Open / toggle chatbot
+  toggleGeoBot.addEventListener('click', () => geoPopup.classList.toggle('hidden'));
+
+  // Close chatbot
+  closeGeoBot.addEventListener('click', () => geoPopup.classList.add('hidden'));
+
+  // Handle Enter key
+  geoInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && geoInput.value.trim()) {
+      const userMessage = geoInput.value.trim();
+      geoInput.value = '';
+      appendMessage('You', userMessage);
+      simulateResponse(userMessage);
+    }
+  });
+
+  // Quick reply buttons
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const msg = btn.dataset.msg;
+      appendMessage('You', msg);
+      simulateResponse(msg);
+    });
+  });
+
+  function appendMessage(sender, text) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('flex', 'items-start', 'space-x-2');
+    const isUser = sender === "You";
+
+    msgDiv.innerHTML = `
+      <div class="w-6 h-6 rounded-full bg-${isUser ? 'blue' : 'green'}-500 flex items-center justify-center text-white text-xs font-bold">
+        ${isUser ? 'U' : 'G'}
+      </div>
+      <div>
+        <p class="font-semibold">${sender}:</p>
+        <p class="text-gray-700">${text}</p>
+      </div>
+    `;
+    geoLog.appendChild(msgDiv);
+    geoLog.scrollTop = geoLog.scrollHeight;
+  }
+
+  function simulateResponse(userInput) {
+    const input = userInput.toLowerCase();
+    let reply = "🤖 I'm just a demo bot! Try asking about services or contact info.";
+
+    if (["hi", "hello", "hey"].includes(input)) {
+      reply = "👋 Hello! I'm GeoBot. How can I assist you today?";
+    } else if (input.includes("service")) {
+      reply = "🛠️ We provide GIS, Remote Sensing, AI Automation, and Infrastructure Monitoring.";
+    } else if (input.includes("contact")) {
+      reply = "📞 Contact us at geodatainsights@asia.com or WhatsApp +66 95 184 8485.";
+    } else if (input.includes("office") || input.includes("location")) {
+      reply = "📍 We have offices in Dubai, Bangkok, and Hyderabad.";
+    } else if (input.includes("founder")) {
+      reply = "👨‍💼 Our founder is Mishak Rahul, expert in GIS Automation and Remote Sensing.";
+    }
+
+    setTimeout(() => appendMessage("GeoBot", reply), 700);
+  }
+
+  // Auto greet on load
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      geoPopup.classList.remove("hidden");
+      appendMessage("GeoBot", "👋 Hi there! I'm GeoBot from GeoData Insights. Ask me about services, offices, or how to contact us!");
+    }, 3000);
+  });
+</script>
+
 </body>
 </html>
