@@ -12,24 +12,24 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-  :root {
-    --primary: #0D1117;         /* OLED black background */
-    --secondary: #58A6FF;       /* Bright neon blue */
-    --accent: #14F195;          /* Fresh mint green */
-    --text-text-dark: #161B22;         /* Dark surface color */
-    --text-black: #E6EDF3;      /* High contrast text */
-    --text-text-dark: #8B949E;      /* Muted text */
-    --border: #30363D;          /* Subtle border */
-    --card-hover: rgba(255, 255, 255, 0.08);
-  }
+        :root {
+            --primary: #0D1117;         /* OLED black background */
+            --secondary: #FF6B6B;       /* Vibrant coral red (for buttons, highlights) */
+            --accent: #4ECDC4;          /* Refreshing aqua (minty teal) */
+            --neutral: #F7F9FB;         /* Soft light gray for cards/sections */
+            --text-light: #1A1A1A;      /* Almost-black for primary text */
+            --text-muted: #6C757D;      /* Cool muted gray for secondary text */
+            --border: #E1E4E8;          /* Light border for separation */
+            --card-hover: rgba(78, 205, 196, 0.1); /* Aqua hover for a gentle glow */
+        }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    scroll-behavior: smooth;
-    background-color: var(--text-body);
-    color: var(--text-dark);
-    line-height: 1.6;
-  }
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: var(--primary);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
@@ -202,20 +202,22 @@
         }
         
         /* Navigation */
+                /* Navigation Styles */
         .nav-transparent {
-            background-color: rgba(15, 23, 42, 0.8);
+            background-color: rgba(13, 17, 23, 0.9);
             backdrop-filter: blur(10px);
         }
-        
+
         .nav-solid {
-            background-color: var(--darker);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--neutral);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         }
-        
+
         .nav-link {
             position: relative;
+            transition: color 0.3s ease;
         }
-        
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -226,9 +228,35 @@
             background-color: var(--secondary);
             transition: width 0.3s ease;
         }
-        
+
         .nav-link:hover::after {
             width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--neutral) 100%);
+        }
+
+        .typing-text {
+            border-right: 4px solid var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .typing-text.typing {
+            animation: typing 4.5s steps(50, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--secondary) }
         }
         
         /* Buttons */
@@ -255,146 +283,100 @@
         }
         
         /* Cards */
+                /* Service Cards */
         .service-card {
+            background-color: var(--neutral);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             transition: all 0.3s ease;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            background-color: white;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-        
-        .tech-icon {
-            transition: all 0.3s ease;
-        }
-        
-        .tech-icon:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
-        }
-        
-        .case-study-card {
-            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
-            background-color: white;
         }
-        
-        .case-study-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, var(--secondary), transparent);
+            transform: rotate(45deg);
+            opacity: 0;
+            transition: opacity 0.5s;
         }
-        
-        .case-study-img {
-            transition: all 0.5s ease;
+
+        .service-card:hover::before {
+            opacity: 0.1;
         }
-        
-        .case-study-card:hover .case-study-img {
-            transform: scale(1.05);
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(20, 241, 149, 0.2);
         }
-        
-        /* Form elements */
-        .input-field {
+
+        /* Technology Grid */
+        .tech-card {
+            background-color: var(--neutral);
+            border: 1px solid var(--border);
             transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        /* Case Study Filter */
+        .filter-btn.active {
+            background-color: var(--secondary);
+            color: var(--primary);
         }
         
+                /* Form Elements */
+        .input-field {
+            background-color: var(--neutral);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
         .input-field:focus {
             border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
         }
-        
+
         /* Animations */
-        .fade-in {
-            animation: fadeIn 1s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .slide-up {
-            animation: slideUp 0.8s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from { 
+        @keyframes fadeInUp {
+            from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(20px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
-        .pulse {
-            animation: pulse 2s infinite;
+
+        .animate-fadeIn {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Sections */
-        .section {
-            padding: 100px 0;
-        }
-        
-        .section-title {
+
+        /* Globe Container */
+        #globe-container {
             position: relative;
-            display: inline-block;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 3px;
-            bottom: -10px;
-            left: 0;
-            background-color: var(--secondary);
-        }
-        
-        /* Loading screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background-color: var(--darker);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+            height: 600px;
+            background: radial-gradient(circle at center, var(--secondary) 0%, var(--primary) 70%);
+            border-radius: 16px;
+            overflow: hidden;
         }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--secondary);
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Map styles */
+
+        /* Map Styles */
         #office-map {
             height: 500px;
-            width: 100%;
             border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border);
         }
         
         .map-marker {
@@ -459,7 +441,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="text-white text-2xl font-bold">
-                        <span class="text-secondary">Geo</span>Data Insights
+                        <span class="text-primary">Geo</span>Data Insights
                     </div>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
@@ -1328,6 +1310,41 @@
                 <i class="fas fa-arrow-up"></i>
             </a>
         </div>
+  <p class="text-sm text-gray-300 text-center mt-2" id="visitorCounter">Visitors: 0</p>
+ <script>
+  if (!localStorage.getItem('visited')) {
+    localStorage.setItem('visited', 'true');
+    let visits = parseInt(localStorage.getItem('visitCount') || '0') + 1;
+    localStorage.setItem('visitCount', visits);
+  }
+  document.getElementById('visitorCounter').textContent = "Visitors: " + localStorage.getItem('visitCount');
+</script>
+     
+    <!-- 🌐 Centered Live Clock with Animation in Footer -->
+<div class="flex justify-center mt-6">
+  <div id="dateTime" class="text-lg text-accent font-mono animate-pulse text-center bg-gray-800 px-4 py-2 rounded shadow-lg">
+    Loading time...
+  </div>
+</div>
+
+<script>
+  function updateDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    };
+    const dateString = now.toLocaleDateString(undefined, options);
+    const timeString = now.toLocaleTimeString(undefined, { hour12: false });
+    document.getElementById('dateTime').textContent = `${dateString} | ⏰ ${timeString}`;
+  }
+
+  updateDateTime(); // Initial call
+  setInterval(updateDateTime, 1000); // Update every second
+</script>
+
     </footer>
 
     <script>
@@ -1615,6 +1632,18 @@
     }, 3000);
   });
 </script>
+<!-- Google Translate -->
+<div id="google_translate_element" class="fixed top-12 left-1/2 transform -translate-x-1/2 z-50"></div>
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,th,es,hi,fr,de,zh',
+      layout: google.translate.TranslateElement.InlineLayout.HoRIZONTAL
+    }, 'google_translate_element');
+  }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
-</html>
+</
