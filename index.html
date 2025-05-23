@@ -15,15 +15,12 @@
         :root {
             --primary: #0D1117;         /* OLED black background */
             --secondary: #FF6B6B;       /* Vibrant coral red (for buttons, highlights) */
-            --accent: #007A70;          /* Refreshing aqua (minty teal) - Updated */
+            --accent: #4ECDC4;          /* Refreshing aqua (minty teal) */
             --neutral: #F7F9FB;         /* Soft light gray for cards/sections */
-            --text-light: #E0E0E0;      /* Light gray for text on dark backgrounds */
+            --text-light: #1A1A1A;      /* Almost-black for primary text */
             --text-muted: #6C757D;      /* Cool muted gray for secondary text */
             --border: #E1E4E8;          /* Light border for separation */
             --card-hover: rgba(78, 205, 196, 0.1); /* Aqua hover for a gentle glow */
-            --text-body: #D1D5DB;       /* For h1-h6 on dark backgrounds */
-            --dark: #0D1117;
-            --darker: #010409;
         }
 
         body {
@@ -54,13 +51,13 @@
   }
 
   .nav-solid {
-    background-color: var(--primary);
+    background-color: var(--neutral);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   }
 
   .btn-primary {
     background-color: var(--accent);
-    color: #FFF;
+    color: #000;
     font-weight: 600;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 6px 20px rgba(20, 241, 149, 0.3);
@@ -73,7 +70,7 @@
 
   .btn-secondary {
     background-color: var(--secondary);
-    color: #FFF;
+    color: #000;
     font-weight: 600;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 6px 20px rgba(88, 166, 255, 0.3);
@@ -106,14 +103,18 @@
     background-color: var(--secondary);
   }
 
-  .case-study-card { 
+  .service-card,
+  .case-study-card,
+  .tech-card {
     background-color: var(--neutral);
     border: 1px solid var(--border);
     border-radius: 12px;
     transition: all 0.3s ease;
   }
 
-  .case-study-card:hover {
+  .service-card:hover,
+  .case-study-card:hover,
+  .tech-card:hover {
     transform: translateY(-6px);
     background-color: var(--card-hover);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
@@ -122,23 +123,34 @@
   .tech-icon {
     color: var(--accent);
   }
-  
-  canvas { 
+
+  #globe-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    margin: 0 auto;
+    background-color: #010409;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+  }
+
+  canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
   }
 
-  .input-field { 
+  .input-field {
     background-color: var(--neutral);
-    color: var(--text-light); 
+    color: var(--text-light);
     border: 1px solid var(--border);
-    transition: border 0.3s ease, box-shadow 0.3s ease; 
+    transition: border 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .input-field:focus { 
+  .input-field:focus {
     border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3); 
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
     outline: none;
   }
 
@@ -146,6 +158,26 @@
     background-color: var(--neutral);
     color: var(--text-muted);
   }
+
+  @media (max-width: 768px) {
+    #globe-container {
+      height: 350px;
+    }
+  }
+  
+        /* 3D Globe Container */
+        #globe-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+        
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
         
         /* Typing animation */
         .typing-text {
@@ -169,6 +201,19 @@
             50% { border-color: var(--secondary) }
         }
         
+        /* Navigation */
+        
+        .nav-transparent {
+            background-color: rgba(13, 17, 23, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-solid {
+    background-color: var(--primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+
         .nav-link {
             position: relative;
             transition: color 0.3s ease;
@@ -193,8 +238,53 @@
         .hero-section {
             background: linear-gradient(135deg, var(--primary) 0%, var(--neutral) 100%);
         }
+
+        .typing-text {
+            border-right: 4px solid var(--secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .typing-text.typing {
+            animation: typing 4.5s steps(50, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--secondary) }
+        }
         
-        /* Service Cards */
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--accent);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Cards */
+                /* Service Cards */
         .service-card {
             background-color: var(--neutral);
             border: 1px solid var(--border);
@@ -244,6 +334,19 @@
             color: var(--primary);
         }
         
+                /* Form Elements */
+        .input-field {
+            background-color: var(--neutral);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -288,15 +391,17 @@
         }
         
         /* Founder section */
-        .founder-card { 
+        .founder-card {
             background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         
-        .founder-image { 
+        .founder-image {
             height: 300px;
+            background-size: cover;
+            background-position: center;
         }
         
         /* Responsive adjustments */
@@ -305,7 +410,7 @@
                 padding: 80px 0;
             }
             
-            #globe-container { 
+            #globe-container {
                 height: 300px;
             }
             
@@ -313,16 +418,17 @@
                 height: 350px;
             }
             
-            .founder-card { 
+            .founder-card {
                 flex-direction: column;
             }
             
-            .founder-image { 
+            .founder-image {
                 height: 200px;
                 width: 100%;
             }
         }
 </style>
+
 </head>
 <body>
     <!-- Loading Screen -->
@@ -409,7 +515,7 @@
                 <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
                     Intelligent Solutions for a Data-Driven World
                 </h2>
-                <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
                     Our comprehensive suite of geospatial services leverages cutting-edge technologies to deliver actionable insights across industries.
                 </p>
             </div>
@@ -421,10 +527,10 @@
                         <i class="fas fa-leaf text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">Precision Agriculture</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Optimize crop health, reduce inputs, and maximize yields with our AI-powered agricultural analytics.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Crop Health Monitoring
@@ -447,10 +553,10 @@
                         <i class="fas fa-tree text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">Sustainable Development</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Monitor environmental changes and support conservation efforts with our remote sensing solutions.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Deforestation Tracking
@@ -473,10 +579,10 @@
                         <i class="fas fa-building text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">Construction & Infrastructure</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Streamline construction projects with automated progress monitoring and 3D site visualization.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Automated Progress Tracking
@@ -499,10 +605,10 @@
                         <i class="fas fa-truck text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">Transportation & Logistics</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Optimize routes, reduce costs, and improve fleet management with our GIS network analysis.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Route Optimization
@@ -525,10 +631,10 @@
                         <i class="fas fa-robot text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">AI & Automation</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Leverage our custom AI algorithms for automated feature extraction and predictive modeling.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Automated Feature Extraction
@@ -551,10 +657,10 @@
                         <i class="fas fa-cloud text-4xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-3">SAAS Platform</h3>
-                    <p class="text-gray-700 mb-4">
+                    <p class="text-gray-600 mb-4">
                         Access powerful geospatial insights through our intuitive, scalable cloud-based platform.
                     </p>
-                    <ul class="space-y-2 text-gray-700 mb-6">
+                    <ul class="space-y-2 text-gray-600 mb-6">
                         <li class="flex items-center">
                             <i class="fas fa-check-circle text-secondary mr-2"></i>
                             Custom Dashboards
@@ -581,7 +687,7 @@
                 <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
                     Our Global Presence
                 </h2>
-                <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
                     With offices across three continents, we provide localized geospatial solutions with global expertise.
                 </p>
             </div>
@@ -592,18 +698,18 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
                             <h3 class="text-xl font-bold text-primary mb-3">Dubai Office</h3>
-                            <p class="text-gray-700 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Business Bay, Dubai, UAE</p>
-                            <p class="text-gray-700"><i class="fas fa-phone text-secondary mr-2"></i> +971 4 123 4567</p>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Business Bay, Dubai, UAE</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +971 4 123 4567</p>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-primary mb-3">Bangkok Office</h3>
-                            <p class="text-gray-700 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Sathon, Bangkok, Thailand</p>
-                            <p class="text-gray-700"><i class="fas fa-phone text-secondary mr-2"></i> +66 2 123 4567</p>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> Sathon, Bangkok, Thailand</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +66 2 123 4567</p>
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-primary mb-3">Hyderabad Office</h3>
-                            <p class="text-gray-700 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> HITEC City, Hyderabad, India</p>
-                            <p class="text-gray-700"><i class="fas fa-phone text-secondary mr-2"></i> +91 40 1234 5678</p>
+                            <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt text-secondary mr-2"></i> HITEC City, Hyderabad, India</p>
+                            <p class="text-gray-600"><i class="fas fa-phone text-secondary mr-2"></i> +91 40 1234 5678</p>
                         </div>
                     </div>
                 </div>
@@ -616,13 +722,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-secondary bg-opacity-10 p-6 rounded-lg">
                         <h4 class="font-bold text-secondary text-xl mb-4">Our Mission:</h4>
-                        <p class="text-gray-700">
+                        <p class="text-gray-600">
                             To empower organizations across industries with cutting-edge, automated GIS and Remote Sensing SAAS solutions, transforming raw data into strategic assets and fostering sustainable growth.
                         </p>
                     </div>
                     <div class="bg-accent bg-opacity-10 p-6 rounded-lg">
                         <h4 class="font-bold text-accent text-xl mb-4">Our Vision:</h4>
-                        <p class="text-gray-700">
+                        <p class="text-gray-600">
                             To be a global leader in geospatial intelligence, making advanced data analytics accessible, intuitive, and integral to decision-making for a better, more connected future.
                         </p>
                     </div>
@@ -638,22 +744,22 @@
                 <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
                     Meet Our Founder
                 </h2>
-                <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
                     The visionary behind GeoData Insights, driving innovation in geospatial intelligence.
                 </p>
             </div>
             
             <div class="founder-card flex flex-col md:flex-row">
                 <div class="founder-image md:w-1/3 bg-[url('https://images.unsplash.com/photo-1742544699721-ce0cebb82e05?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]"></div>
-                <div class="md:w-2/3 p-8 text-gray-400"> <!-- text-black-50 changed to text-gray-400 -->
+                <div class="md:w-2/3 p-8 text-black-50">
                     <h3 class="text-2xl md:text-3xl font-bold mb-4">Mishak Rahul</h3>
-                    <p class="text-lg text-gray-300 mb-6"> <!-- text-black-50-300 changed to text-gray-300 -->
+                    <p class="text-lg text-black-50-300 mb-6">
                         With over 5 years of experience in GIS and remote sensing, Mishak Rahul founded GeoData Insights to bridge the gap between complex geospatial data and actionable business intelligence. His expertise in automation and AI-driven analytics has revolutionized how organizations leverage location data.
                     </p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <h4 class="font-semibold text-secondary mb-2">Education</h4>
-                            <ul class="space-y-2 text-gray-400"> <!-- text-black-50 changed to text-gray-400 -->
+                            <ul class="space-y-2 text-black-50">
                                 <li class="flex items-start">
                                     <i class="fas fa-graduation-cap text-secondary mr-2 mt-1"></i>
                                     <span>Master of Engineering in Remote Sensing and Geographic Information Systems</span>
@@ -705,7 +811,7 @@
                 <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
                     Powering Precision: The Technologies We Master
                 </h2>
-                <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
                     Our comprehensive technology stack enables us to deliver cutting-edge geospatial solutions tailored to your needs.
                 </p>
             </div>
@@ -717,7 +823,7 @@
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">GIS Software</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>ArcGIS Suite</li>
                         <li>QGIS</li>
                         <li>Google Earth Engine</li>
@@ -731,7 +837,7 @@
                         <i class="fas fa-satellite"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Remote Sensing</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>Satellite Imagery</li>
                         <li>LiDAR</li>
                         <li>Drone Data</li>
@@ -745,7 +851,7 @@
                         <i class="fas fa-brain"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">AI & ML</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>Computer Vision</li>
                         <li>TensorFlow/PyTorch</li>
                         <li>Predictive Analytics</li>
@@ -759,7 +865,7 @@
                         <i class="fas fa-cloud"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Cloud & SAAS</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>AWS/GCP/Azure</li>
                         <li>PostGIS</li>
                         <li>GeoServer</li>
@@ -773,7 +879,7 @@
                         <i class="fas fa-code"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Programming</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>Python</li>
                         <li>JavaScript</li>
                         <li>R</li>
@@ -787,7 +893,7 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Visualization</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>Mapbox</li>
                         <li>Leaflet</li>
                         <li>D3.js</li>
@@ -801,7 +907,7 @@
                         <i class="fas fa-database"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Data Processing</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>GDAL</li>
                         <li>Rasterio</li>
                         <li>Geopandas</li>
@@ -815,7 +921,7 @@
                         <i class="fas fa-cogs"></i>
                     </div>
                     <h3 class="text-xl font-bold text-primary mb-2">Custom Solutions</h3>
-                    <ul class="text-gray-700 text-sm">
+                    <ul class="text-gray-600 text-sm">
                         <li>Workflow Automation</li>
                         <li>Custom Algorithms</li>
                         <li>Integration Services</li>
@@ -833,7 +939,7 @@
                 <h2 class="section-title text-3xl md:text-4xl font-bold text-primary inline-block">
                     Transforming Industries: Real-World Impact
                 </h2>
-                <p class="mt-6 text-lg text-gray-700 max-w-3xl mx-auto">
+                <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
                     Explore how our geospatial solutions have delivered measurable results across diverse sectors.
                 </p>
             </div>
@@ -863,17 +969,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="agriculture">
                     <div class="h-48 overflow-hidden">
                         <img src="https://cdn.prod.website-files.com/63c11c31e4d776840d123bba/674092fbdbaa112d3a9a8c1b_0*I-VTwehSMOu6DGeG.jpeg" 
-                             alt="Precision agriculture in action" 
+                             alt="Precision Agriculture" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-secondary bg-secondary bg-opacity-10 rounded-full mb-2">Agriculture</span>
                         <h3 class="text-xl font-bold text-primary mb-2">AI-Powered Crop Health Monitoring Boosts Yield by 15%</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Implemented a custom AI solution using satellite and drone imagery to monitor crop health and detect stress early.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (Precision Agriculture) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Leading Agribusiness</span>
                         </div>
@@ -884,17 +989,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="construction">
                     <div class="h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1544&q=80" 
-                             alt="Cityscape indicating construction monitoring" 
+                             alt="Construction Monitoring" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-accent bg-accent bg-opacity-10 rounded-full mb-2">Construction</span>
                         <h3 class="text-xl font-bold text-primary mb-2">Automated Earthwork Tracking Saves 70% Reporting Time</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Developed a drone-based volumetric monitoring system for a major highway construction project.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (Construction Monitoring) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Infrastructure Developer</span>
                         </div>
@@ -905,17 +1009,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="sustainability">
                     <div class="h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1632789124528-07b43ba96460?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                             alt="Forest area highlighting deforestation monitoring" 
+                             alt="Deforestation Monitoring" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-green-500 bg-green-50 rounded-full mb-2">Sustainability</span>
                         <h3 class="text-xl font-bold text-primary mb-2">Deforestation Monitoring in the Amazon Using Time-Series Analysis</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Created an automated deforestation detection system using Sentinel-2 imagery and Google Earth Engine.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (Deforestation Monitoring) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Environmental NGO</span>
                         </div>
@@ -926,17 +1029,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="ai">
                     <div class="h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80" 
-                             alt="Abstract AI representation for building footprint extraction" 
+                             alt="AI Building Footprint" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-purple-500 bg-purple-50 rounded-full mb-2">AI Automation</span>
                         <h3 class="text-xl font-bold text-primary mb-2">Automated Building Footprint Extraction with 95% Accuracy</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Developed a deep learning model for automated building detection from high-resolution imagery.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (AI Building Footprint Extraction) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Urban Planning Agency</span>
                         </div>
@@ -947,17 +1049,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="agriculture">
                     <div class="h-48 overflow-hidden">
                         <img src="https://startnetx.in/wp-content/uploads/2024/08/zxcxbfrbbr.jpg" 
-                             alt="Vineyard with indicators for pest infestation" 
+                             alt="Vineyard Management" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-secondary bg-secondary bg-opacity-10 rounded-full mb-2">Agriculture</span>
                         <h3 class="text-xl font-bold text-primary mb-2">AI-Driven Pest Infestation Early Warning System</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Created a drone-based monitoring system for early pest detection in vineyards, reducing crop loss by 25%.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (Pest Infestation Warning) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Vineyard Estate</span>
                         </div>
@@ -968,17 +1069,16 @@
                 <div class="case-study-card rounded-xl overflow-hidden shadow-lg" data-category="ai">
                     <div class="h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                             alt="Satellite map view for land cover classification" 
+                             alt="Land Cover Classification" 
                              class="w-full h-full object-cover case-study-img">
                     </div>
                     <div class="p-6">
                         <span class="inline-block px-3 py-1 text-xs font-semibold text-purple-500 bg-purple-50 rounded-full mb-2">AI Automation</span>
                         <h3 class="text-xl font-bold text-primary mb-2">Scalable Land Cover Classification Using Machine Learning</h3>
-                        <p class="text-gray-700 mb-4">
+                        <p class="text-gray-600 mb-4">
                             Implemented a Google Earth Engine solution for regional-scale land cover mapping with 90% accuracy.
                         </p>
                         <div class="flex justify-between items-center">
-                            <!-- TODO: Add actual URL for Read Case Study (Land Cover Classification) -->
                             <a href="#" class="text-secondary font-semibold hover:underline">Read Case Study →</a>
                             <span class="text-xs text-gray-500">Client: Government Agency</span>
                         </div>
@@ -987,7 +1087,6 @@
             </div>
             
             <div class="text-center mt-12">
-                <!-- TODO: Add actual URL for View All Case Studies -->
                 <a href="#" class="btn-secondary px-8 py-3 rounded-full text-white font-semibold inline-block">
                     View All Case Studies
                 </a>
@@ -1043,7 +1142,7 @@
                                     <p class="text-neutral-200">iam.roy</p>
                                     <div class="mt-2 bg-white p-2 rounded inline-block">
                                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://line.me/ti/p/~iam.roy" 
-                                             alt="LINE QR Code for user iam.roy" 
+                                             alt="LINE QR Code" 
                                              class="w-24 h-24">
                                     </div>
                                 </div>
@@ -1212,48 +1311,174 @@
                 <i class="fas fa-arrow-up"></i>
             </a>
         </div>
-        <!-- Visitor counter below is client-side only (uses localStorage) and tracks browser revisits, not unique server-side visitors. -->
-        <p class="text-sm text-gray-300 text-center mt-2" id="visitorCounter">Visitors: 0</p>
-        <!-- 🌐 Centered Live Clock with Animation in Footer -->
-        <div class="flex justify-center mt-6">
-            <div id="dateTime" style="color: var(--text-light);" class="text-lg font-mono animate-pulse text-center bg-gray-800 px-4 py-2 rounded shadow-lg">
-                Loading time...
-            </div>
-        </div>
+  <p class="text-sm text-gray-300 text-center mt-2" id="visitorCounter">Visitors: 0</p>
+ <script>
+  if (!localStorage.getItem('visited')) {
+    localStorage.setItem('visited', 'true');
+    let visits = parseInt(localStorage.getItem('visitCount') || '0') + 1;
+    localStorage.setItem('visitCount', visits);
+  }
+  document.getElementById('visitorCounter').textContent = "Visitors: " + localStorage.getItem('visitCount');
+</script>
+     
+    <!-- 🌐 Centered Live Clock with Animation in Footer -->
+<div class="flex justify-center mt-6">
+  <div id="dateTime" class="text-lg text-accent font-mono animate-pulse text-center bg-gray-800 px-4 py-2 rounded shadow-lg">
+    Loading time...
+  </div>
+</div>
+
+<script>
+  function updateDateTime() {
+    const now = new Date();
+    const options = {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    };
+    const dateString = now.toLocaleDateString(undefined, options);
+    const timeString = now.toLocaleTimeString(undefined, { hour12: false });
+    document.getElementById('dateTime').textContent = `${dateString} | ⏰ ${timeString}`;
+  }
+
+  updateDateTime(); // Initial call
+  setInterval(updateDateTime, 1000); // Update every second
+</script>
+
     </footer>
 
     <script>
-        // --- GLOBALLY DEFINED FUNCTIONS ---
-        function updateDateTime() {
-            const now = new Date();
-            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            const dateString = now.toLocaleDateString(undefined, options);
-            const timeString = now.toLocaleTimeString(undefined, { hour12: false });
-            const dateTimeElement = document.getElementById('dateTime');
-            if (dateTimeElement) {
-                dateTimeElement.textContent = `${dateString} | ⏰ ${timeString}`;
-            }
-        }
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
 
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.remove('nav-transparent');
+                navbar.classList.add('nav-solid');
+            } else {
+                navbar.classList.add('nav-transparent');
+                navbar.classList.remove('nav-solid');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Case study filtering
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const caseStudyCards = document.querySelectorAll('.case-study-card');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active button
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-secondary', 'text-white');
+                    btn.classList.add('text-secondary');
+                });
+                
+                this.classList.add('bg-secondary', 'text-white');
+                this.classList.remove('text-secondary');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                // Filter case studies
+                caseStudyCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Here you would typically send the form data to a server
+            // For this demo, we'll just show an alert
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
+            observer.observe(element);
+        });
+         
+        // Initialize 3D Globe
         function initGlobe() {
             const container = document.getElementById('globe-container');
-            if (!container) return;
             const width = container.clientWidth;
             const height = container.clientHeight;
             
+            // Scene setup
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(width, height);
-            container.innerHTML = ''; 
             container.appendChild(renderer.domElement);
             
+            // Earth
             const geometry = new THREE.SphereGeometry(5, 64, 64);
             const texture = new THREE.TextureLoader().load('https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/1200px-The_Earth_seen_from_Apollo_17.jpg');
             const material = new THREE.MeshBasicMaterial({ map: texture });
             const earth = new THREE.Mesh(geometry, material);
             scene.add(earth);
             
+            // Satellites
             const satellites = [];
             const satelliteGeometry = new THREE.SphereGeometry(0.2, 32, 32);
             const satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x3B82F6 });
@@ -1266,22 +1491,28 @@
                 satellites.push(satellite);
             }
             
+            // Camera position
             camera.position.z = 10;
             
+            // Animation
             function animate() {
                 requestAnimationFrame(animate);
+                
                 earth.rotation.y += 0.002;
+                
                 satellites.forEach((sat, idx) => {
                     const angle = Date.now() * 0.0005 + (idx * 120 * Math.PI / 180);
                     sat.position.x = 7 * Math.cos(angle);
                     sat.position.z = 7 * Math.sin(angle);
                 });
+                
                 renderer.render(scene, camera);
             }
+            
             animate();
             
+            // Handle window resize
             window.addEventListener('resize', () => {
-                if (!container) return;
                 const newWidth = container.clientWidth;
                 const newHeight = container.clientHeight;
                 camera.aspect = newWidth / newHeight;
@@ -1290,243 +1521,197 @@
             });
         }
 
+        // Initialize Office Map
         function initOfficeMap() {
-            const mapElement = document.getElementById('office-map');
-            if (!mapElement) return;
-
             const map = L.map('office-map').setView([20, 80], 3);
+            
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
+            // Office locations
             const offices = [
                 { name: "Dubai Office", coords: [25.1972, 55.2744], phone: "+971 4 123 4567" },
                 { name: "Bangkok Office", coords: [13.7200, 100.5200], phone: "+66 2 123 4567" },
                 { name: "Hyderabad Office", coords: [17.3850, 78.4867], phone: "+91 40 1234 5678" }
             ];
             
+            // Add markers
             offices.forEach(office => {
                 const marker = L.marker(office.coords, {
-                    icon: L.divIcon({ className: 'map-marker', iconSize: [24, 24] })
+                    icon: L.divIcon({
+                        className: 'map-marker',
+                        iconSize: [24, 24]
+                    })
                 }).addTo(map);
-                marker.bindPopup(`<div class="font-bold text-primary">${office.name}</div><div class="text-gray-600">${office.phone}</div>`);
+                
+                marker.bindPopup(`
+                    <div class="font-bold text-primary">${office.name}</div>
+                    <div class="text-gray-600">${office.phone}</div>
+                `);
             });
             
+            // Fit bounds to show all offices
             const bounds = L.latLngBounds(offices.map(o => o.coords));
             map.fitBounds(bounds.pad(0.2));
         }
 
-        function appendGeoMessage(sender, message) {
-            const geoLog = document.getElementById('geoChatLog');
-            if (!geoLog) return;
-            const msgDiv = document.createElement('div');
-            msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            geoLog.appendChild(msgDiv);
-            geoLog.scrollTop = geoLog.scrollHeight;
-        }
-
-        function simulateGeoResponse(userInput) {
-            const lowerInput = userInput.toLowerCase();
-            let reply = "I'm here to help with GeoData Insights!";
-            if (["hi", "hello", "hey"].includes(lowerInput)) {
-                reply = "👋 Hello! How can I assist you today?";
-            } else if (lowerInput.includes("service")) {
-                reply = "🛠️ We offer GIS, Remote Sensing, Agriculture Automation, Infrastructure Monitoring, and more!";
-            } else if (lowerInput.includes("contact")) {
-                reply = "📞 You can contact us at geodatainsights@asia.com or WhatsApp +66 95 184 8485.";
-            } else if (lowerInput.includes("location") || lowerInput.includes("office")) {
-                reply = "📍 Our offices are in Dubai, Bangkok, and Hyderabad.";
-            } else if (lowerInput.includes("founder")) {
-                reply = "👨‍💼 Our founder is Mishak Rahul, an expert in GIS Automation and Remote Sensing Analytics.";
-            } else {
-                reply = "🤖 Sorry, I'm just a demo bot. Try asking about services, contact, or our offices!";
-            }
-            setTimeout(() => appendGeoMessage('GeoBot', reply), 800);
-        }
-        
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en',
-                includedLanguages: 'en,th,es,hi,fr,de,zh',
-                layout: google.translate.TranslateElement.InlineLayout.HoRIZONTAL
-            }, 'google_translate_element');
-        }
-
-        // --- CONSOLIDATED DOMCONTENTLOADED LISTENER ---
+        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Visitor Counter Logic
-            if (!localStorage.getItem('visited')) {
-                localStorage.setItem('visited', 'true');
-                let visits = parseInt(localStorage.getItem('visitCount') || '0') + 1;
-                localStorage.setItem('visitCount', visits);
-            }
-            const visitorCounterElement = document.getElementById('visitorCounter');
-            if (visitorCounterElement) {
-                 visitorCounterElement.textContent = "Visitors: " + localStorage.getItem('visitCount');
-            }
-
-            // Live Clock Init
-            updateDateTime(); 
-            setInterval(updateDateTime, 1000);
-
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobileMenuButton');
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-
-            // Smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80, 
-                            behavior: 'smooth'
-                        });
-                        const mobileMenu = document.getElementById('mobileMenu');
-                         if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                            mobileMenu.classList.add('hidden');
-                        }
-                    }
-                });
-            });
-
-            // Case study filtering
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const caseStudyCards = document.querySelectorAll('.case-study-card');
-            if (filterButtons.length > 0 && caseStudyCards.length > 0) {
-                filterButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        filterButtons.forEach(btn => {
-                            btn.classList.remove('bg-secondary', 'text-white');
-                            btn.classList.add('text-secondary');
-                        });
-                        this.classList.add('bg-secondary', 'text-white');
-                        this.classList.remove('text-secondary');
-                        const filter = this.getAttribute('data-filter');
-                        caseStudyCards.forEach(card => {
-                            if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                    });
-                });
-            }
-
-            // Form submission
-            const contactForm = document.getElementById('contactForm');
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    alert('Thank you for your message! We will get back to you soon.');
-                    this.reset();
-                });
-            }
-
-            // Set current year in footer
-            const currentYearElement = document.getElementById('currentYear');
-            if (currentYearElement) {
-                currentYearElement.textContent = new Date().getFullYear();
-            }
-
-            // Intersection Observer for scroll animations
-            const observerOptions = { threshold: 0.1 };
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-fadeIn');
-                    }
-                });
-            }, observerOptions);
-            document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
-                observer.observe(element);
-            });
-            
             initGlobe();
             initOfficeMap();
-
-            // Chatbot UI Event Listeners
-            const toggleGeoBot = document.getElementById('toggleGeoBot');
-            const geoPopup = document.getElementById('geoBotPopup');
-            const geoInput = document.getElementById('geoChatInput');
-
-            if (toggleGeoBot && geoPopup) {
-                toggleGeoBot.addEventListener('click', () => geoPopup.classList.toggle('hidden'));
-            }
-            if (geoInput) {
-                geoInput.addEventListener('keypress', function (e) {
-                    if (e.key === 'Enter' && geoInput.value.trim()) {
-                        const userMessage = geoInput.value.trim();
-                        geoInput.value = '';
-                        appendGeoMessage('You', userMessage);
-                        simulateGeoResponse(userMessage);
-                    }
-                });
-            }
         });
 
-        // --- CONSOLIDATED WINDOW LOAD LISTENER ---
-        window.addEventListener('load', function() {
-            // Loading screen
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                setTimeout(function() {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(function() {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                }, 1000);
-            }
+</script>
 
-            // Chatbot auto-popup
-            const geoPopup = document.getElementById('geoBotPopup');
-            if (geoPopup) { 
-                setTimeout(() => {
-                    if (geoPopup.classList.contains('hidden')) { // Only show if not already manually opened
-                         geoPopup.classList.remove("hidden");
-                         appendGeoMessage("GeoBot", "👋 Hi there! I'm GeoBot from GeoData Insights. Ask me about services, offices, or how to contact us!");
-                    }
-                }, 3000);
-            }
-        });
 
-        // Navbar scroll effect (global listener)
-        window.addEventListener('scroll', function() {
-            const navbar = document.getElementById('navbar');
-            if (navbar) { 
-                if (window.scrollY > 50) {
-                    navbar.classList.remove('nav-transparent');
-                    navbar.classList.add('nav-solid');
-                } else {
-                    navbar.classList.add('nav-transparent');
-                    navbar.classList.remove('nav-solid');
-                }
-            }
-        });
-    </script>
-    <!-- Optional Sound Alert -->
-    <audio id="chat-sound" src="https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.mp3" preload="auto"></audio>
+</script>
+<!-- Optional Sound Alert -->
+<audio id="chat-sound" src="https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.mp3" preload="auto"></audio>
 
-    <!-- Static Test Chatbot (HTML structure remains, script logic moved) -->
-    <div id="geoBotContainer" class="fixed bottom-6 right-6 z-50">
-      <button id="toggleGeoBot" class="btn-primary px-4 py-2 rounded-full">💬 Ask GeoBot</button>
-      <div id="geoBotPopup" class="hidden mt-2 w-96 h-96 bg-white text-black rounded-lg shadow-lg p-4 flex flex-col">
-        <div id="geoChatLog" class="flex-1 overflow-y-auto mb-2 text-sm space-y-2"></div>
-        <input id="geoChatInput" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Type a message..." />
-      </div>
-    </div>
 
-    <!-- Google Translate -->
-    <div id="google_translate_element" class="fixed top-12 left-1/2 transform -translate-x-1/2 z-50"></div>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+<!-- Static Test Chatbot -->
+<div id="geoBotContainer" class="fixed bottom-6 right-6 z-50">
+  <button id="toggleGeoBot" class="btn-primary px-4 py-2 rounded-full">💬 Ask GeoBot</button>
+  <div id="geoBotPopup" class="hidden mt-2 w-96 h-96 bg-white text-black rounded-lg shadow-lg p-4 flex flex-col">
+    <div id="geoChatLog" class="flex-1 overflow-y-auto mb-2 text-sm space-y-2"></div>
+    <input id="geoChatInput" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="Type a message..." />
+  </div>
+</div>
 
+<script>
+  const toggleGeoBot = document.getElementById('toggleGeoBot');
+  const geoPopup = document.getElementById('geoBotPopup');
+  const geoInput = document.getElementById('geoChatInput');
+  const geoLog = document.getElementById('geoChatLog');
+
+  toggleGeoBot.addEventListener('click', () => geoPopup.classList.toggle('hidden'));
+
+  geoInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && geoInput.value.trim()) {
+      const userMessage = geoInput.value.trim();
+      geoInput.value = '';
+      appendGeoMessage('You', userMessage);
+      simulateGeoResponse(userMessage);
+    }
+  });
+
+  function appendGeoMessage(sender, message) {
+    const msgDiv = document.createElement('div');
+    msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+    geoLog.appendChild(msgDiv);
+    geoLog.scrollTop = geoLog.scrollHeight;
+  }
+
+  function simulateGeoResponse(userInput) {
+    const lowerInput = userInput.toLowerCase();
+  
+     let reply = "🤖 I'm not sure about that. Try asking about our services or training programs!";
+
+  if (["hi", "hello", "hey"].includes(lowerInput)) {
+    reply = "👋 Hey there! What can I help you with today?";
+  } else if (lowerInput.includes("how are you")) {
+    reply = "😊 I'm doing great, thanks for asking! Hope you're doing well too!";
+  } else if (lowerInput.includes("thank") || lowerInput.includes("thanks")) {
+    reply = "🙏 You're very welcome!";
+  } else if (lowerInput.includes("who are you")) {
+    reply = "🤖 I'm GeoBot — your friendly assistant from GeoData Insights!";
+  } else if (lowerInput.includes("joke")) {
+    reply = "😂 Why don’t geographers ever get lost? Because they always take map notes!";
+  } else if (lowerInput.includes("bored")) {
+    reply = "😄 Maybe check out our GIS projects — they’re more exciting than they sound!";
+  } else if (lowerInput.includes("your name")) {
+    reply = "📛 I'm GeoBot, nice to meet you!";
+  } else if (lowerInput.includes("bye") || lowerInput.includes("see you")) {
+    reply = "👋 Take care! Ping me anytime you need help!";
+  } else if (lowerInput.includes("service")) {
+    reply = "🛠️ We offer GIS, Remote Sensing, Agriculture Automation, and Infrastructure Monitoring.";
+  } else if (lowerInput.includes("training") || lowerInput.includes("course")) {
+    reply = "📚 We run courses on GIS, QGIS, Remote Sensing, and Python. Want details?";
+  } else if (lowerInput.includes("project")) {
+    reply = "📊 We consult on smart agriculture, urban development, and infrastructure monitoring.";
+  } else if (lowerInput.includes("contact")) {
+    reply = "📞 Email: geodatainsights@asia.com | WhatsApp: +66 95 184 8485.";
+  } else if (lowerInput.includes("location") || lowerInput.includes("office")) {
+    reply = "📍 Offices in Bangkok, Hyderabad, and Dubai.";
+  } else if (lowerInput.includes("founder")) {
+    reply = "👨‍💼 Our founder is Mishak Rahul — an expert in GIS and remote sensing tech.";
+  } else if (lowerInput.includes("team")) {
+    reply = "👥 We’re a team of GIS analysts, coders, and data scientists. Curious to join?";
+  }
+
+    setTimeout(() => appendGeoMessage('GeoBot', reply), 800);
+  }
+
+  // Greet user after auto-popup
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      geoPopup.classList.remove("hidden");
+      appendGeoMessage("GeoBot", "👋 Hi there! I'm GeoBot from GeoData Insights. Ask me about services, offices, or how to contact us!");
+    }, 3000);
+  });
+</script>
+<!-- Google Translate -->
+<div id="google_translate_element" class="fixed top-10 Center-1/5 transform -translate-x-1/5 z-50"></div>
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,th,es,hi,fr,de,zh,te,tl,ms,de',
+      layout: google.translate.TranslateElement.InlineLayout.HoRIZONTAL
+    }, 'google_translate_element');
+  }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Enhancements Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    .dark {
+      background-color: #0d1117;
+      color: #f0f0f0;
+    }
+    .dark a { color: #ff6b6b; }
+  </style>
+</head>
+<body class="transition-colors duration-300">
+
+  <!-- Scroll Progress Bar -->
+  <div id="scrollProgress" class="fixed top-0 left-0 h-1 bg-yellow-500 z-50" style="width: 0%"></div>
+
+  
+
+
+  <!-- Back-to-Top Button -->
+  <a href="#" class="hidden fixed bottom-20 right-6 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  
+
+  <script>
+    // Scroll Progress Bar
+    window.addEventListener("scroll", () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.getElementById("scrollProgress").style.width = progress + "%";
+
+      document.getElementById("backToTop").style.display = scrollTop > 300 ? 'flex' : 'none';
+    });
+
+    
+
+  </script>
 </body>
 </html>
